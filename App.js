@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,8 +6,13 @@ import {
   Text as RNText,
   View,
   Button,
+  ScrollView,
 } from 'react-native';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import prettier from 'prettier/standalone';
+import babylon from 'prettier/parser-babylon';
+
+const plugins = [babylon];
 
 document.body.style.margin = 0;
 document.body.style['overflow-y'] = 'hidden';
@@ -42,17 +47,25 @@ function useStatJSON() {
   return statJSON;
 }
 
-function ModuleItem({ item: webpackModule }) {
+function ModuleItem({ item: webpackModule, parentModule, index }) {
   const str = webpackModule.identifier
     .replace(new RegExp(`${appProjectRoot}/node_modules`, 'g'), 'npm@')
     .replace(new RegExp(appProjectRoot, 'g'), 'MarketV2@')
     .replace(new RegExp(babelPrefix, 'g'), 'babel << ')
     .replace(/\ [a-z0-9]{32}/, '');
-  const idStr = `${webpackModule.id}`.padStart(5);
+  const parentModuleID = parentModule ? parentModule.id : undefined;
+  const parentModuleIDStr = parentModuleID || '--';
+  const idStr = `M${webpackModule.id ||
+    `${parentModuleIDStr}<${index}>`}`.padStart(6);
   const sizeStr = `${webpackModule.size}`.padStart(6);
+  const to =
+    typeof parentModuleID === 'number'
+      ? `/modules/${parentModuleID}/${index}`
+      : `/modules/${webpackModule.id}`;
   return (
     <Text style={{ fontFamily: 'monospace' }}>
-      {idStr}: [size: {sizeStr}]: {str}
+      <Link to={to}>{idStr}</Link>: [size: {sizeStr}
+      ]: {str}
     </Text>
   );
 }
@@ -89,7 +102,7 @@ function Tabs({ currentTab, setTab, match }) {
       {tabList.map((item, index) => (
         <Button
           key={index}
-          title={currentTab === item ? `"${item}"` : item}
+          title={currentTab === item ? `"${item}"` : `${item}`}
           onPress={() => setTab(item)}
         />
       ))}
@@ -113,7 +126,7 @@ function ChunkInfo({ activeChunk, setTab }) {
           {activeChunk.parents.map(parentID => (
             <Button
               key={parentID}
-              title={parentID}
+              title={`${parentID}`}
               onPress={() => setTab(`chunks:${parentID}`)}
             />
           ))}
@@ -124,12 +137,26 @@ function ChunkInfo({ activeChunk, setTab }) {
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {activeChunk.children.map(childChunkID => (
             <Button
-              title={childChunkID}
+              title={`${childChunkID}`}
               onPress={() => setTab(`chunks:${childChunkID}`)}
             />
           ))}
         </View>
       </View>
+    </View>
+  );
+}
+
+function ModuleInfo({ activeModule, setTab }) {
+  return (
+    <View>
+      <Text>
+        Module #{activeModule.id}: [size {activeModule.size}]{' '}
+        {activeModule.reason}{' '}
+        {activeModule.modules
+          ? `(${activeModule.modules.length} modules)`
+          : null}
+      </Text>
     </View>
   );
 }
@@ -155,7 +182,7 @@ function ModuleList({ json }) {
   );
 }
 
-function ShowChunk({ isChunk, json, match }) {
+function ShowChunk({ json, match }) {
   const chunkID = Number(match.params.chunkID);
   const matchingChunk = json.chunks.find(c => c.id === chunkID);
   if (!matchingChunk) {
@@ -171,6 +198,47 @@ function ShowChunk({ isChunk, json, match }) {
         <ChunkInfo activeChunk={matchingChunk} />
       </View>
       <FlatList data={data} renderItem={ModuleItem} style={{ flex: 1 }} />
+    </View>
+  );
+}
+
+function ShowModule({ json, match }) {
+  const moduleID = Number(match.params.moduleID);
+  const subModuleIndex = Number(match.params.subModuleIndex);
+  let matchingModule = json.modules.find(c => c.id === moduleID);
+  if (!Number.isNaN(subModuleIndex)) {
+    matchingModule = matchingModule.modules[subModuleIndex];
+  }
+  if (!matchingModule) {
+    return `no matching chunk. ${moduleID} ${typeof moduleID}`;
+  }
+  const subModules = useMemo(
+    () => (matchingModule.modules || []).sort(sortBySize),
+    [matchingModule.modules]
+  );
+
+  const renderItem = useCallback(
+    props => <ModuleItem {...props} parentModule={matchingModule} />,
+    [matchingModule]
+  );
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={styles.centeredContent}>
+        <ModuleInfo activeModule={matchingModule} />
+      </View>
+      {Boolean(matchingModule.source) && (
+        <ScrollView style={{ flex: 1 }}>
+          <Text>{prettier.format(matchingModule.source, { plugins })}</Text>
+        </ScrollView>
+      )}
+      {subModules.length !== 0 && (
+        <FlatList
+          data={subModules}
+          renderItem={renderItem}
+          style={{ flex: 1 }}
+        />
+      )}
     </View>
   );
 }
@@ -208,6 +276,16 @@ function LoadedApp({ json }) {
           exact
           render={props => <ModuleList {...props} json={json} />}
         />
+        <Route
+          path="/modules/:moduleID"
+          exact
+          render={props => <ShowModule {...props} json={json} />}
+        />
+        <Route
+          path="/modules/:moduleID/:subModuleIndex"
+          exact
+          render={props => <ShowModule {...props} json={json} />}
+        />
       </Switch>
     </View>
   );
@@ -215,6 +293,7 @@ function LoadedApp({ json }) {
 
 export default function App() {
   const json = useStatJSON();
+  window.json = json;
   console.log('json', json);
   if (!json) {
     return <ActivityIndicator />;
