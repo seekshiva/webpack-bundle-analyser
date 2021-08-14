@@ -74,8 +74,8 @@ function App$LoadedApp(Props) {
                       exact: true,
                       render: (function (param) {
                           return React.createElement(ShowChunk.make, {
-                                      match: param.match,
-                                      json: json
+                                      json: json,
+                                      match: param.match
                                     });
                         })
                     }), React.createElement(ReactRouterDom.Route, {

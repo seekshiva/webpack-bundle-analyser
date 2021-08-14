@@ -12,7 +12,8 @@ import * as ReactRouterDom from "react-router-dom";
 
 function chunkItem(arg) {
   var itemJson = arg.item;
-  var chunkIDStr = ("#" + itemJson.id).padStart(4);
+  var chunkId = String(itemJson.id);
+  var chunkIDStr = ("#" + chunkId).padStart(4);
   var sizeStr = String(itemJson.size).padStart(6);
   var modulesLenStr = String(itemJson.modules.length);
   var chunkReason = Belt_Option.getWithDefault(Caml_option.nullable_to_opt(itemJson.reason), "");
@@ -24,7 +25,7 @@ function chunkItem(arg) {
               },
               children: null
             }, React.createElement(ReactRouterDom.Link, {
-                  to: "/chunks/" + itemJson.id,
+                  to: "/chunks/" + chunkId,
                   style: {
                     fontFamily: "monospace"
                   },

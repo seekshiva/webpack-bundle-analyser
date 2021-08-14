@@ -3,8 +3,9 @@ external jsonToChunk: Js.Json.t => BundledJsonParser.chunk = "%identity"
 let chunkItem = arg => {
   let itemJson = arg["item"]
   let webpackChunk = itemJson->jsonToChunk
+  let chunkId = webpackChunk.id->Belt.Int.toString
 
-  let chunkIDStr = `#${webpackChunk.id}`->Utils.padStart(4)
+  let chunkIDStr = `#${chunkId}`->Utils.padStart(4)
   let sizeStr = webpackChunk.size->Belt.Int.toString->Utils.padStart(6)
 
   let modulesLenStr = webpackChunk.modules->Js.Array.length->Belt.Int.toString
@@ -14,7 +15,7 @@ let chunkItem = arg => {
   open ReactNative
   open ReactRouter
   <View style={objToRnStyle({"flexDirection": "row", "alignItems": "center", "padding": 5})}>
-    <Link to={`/chunks/${webpackChunk.id}`} style={objToRnStyle({"fontFamily": "monospace"})}>
+    <Link to={`/chunks/${chunkId}`} style={objToRnStyle({"fontFamily": "monospace"})}>
       {React.string(`Chunk ${chunkIDStr}`)}
     </Link>
     <Text>

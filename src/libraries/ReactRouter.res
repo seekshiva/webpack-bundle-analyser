@@ -3,7 +3,7 @@ module Router = {
   external make: (~children: React.element) => React.element = "BrowserRouter"
 }
 
-type matchType = {path: string}
+type matchType = {path: string, params: Js.Dict.t<string>}
 type renderFnArgs = {match: matchType}
 
 module Route = {

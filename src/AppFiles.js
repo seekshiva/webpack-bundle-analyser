@@ -67,7 +67,7 @@ function ModuleItem({ item: webpackModule, parentModule, index }) {
 }
 
 
-function ChunkInfo({ activeChunk, setTab }) {
+export function ChunkInfo({ activeChunk, setTab }) {
   return (
     <View>
       <Text>
@@ -120,25 +120,6 @@ const sortBySize = (modA, modB) =>
 
 
 
-export function ShowChunk({ json, match }) {
-  const chunkID = Number(match.params.chunkID);
-  const matchingChunk = json.chunks.find(c => c.id === chunkID);
-  if (!matchingChunk) {
-    return `no matching chunk. ${chunkID} ${typeof chunkID}`;
-  }
-  const data = useMemo(() => matchingChunk.modules.sort(sortBySize), [
-    matchingChunk.modules,
-  ]);
-
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.centeredContent}>
-        <ChunkInfo activeChunk={matchingChunk} />
-      </View>
-      <FlatList data={data} renderItem={ModuleItem} style={{ flex: 1 }} />
-    </View>
-  );
-}
 
 export function ShowModule({ json, match }) {
   const moduleID = Number(match.params.moduleID);
