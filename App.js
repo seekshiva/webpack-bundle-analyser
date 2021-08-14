@@ -32,16 +32,16 @@ function Text(props) {
 }
 
 const appProjectRoot =
-  '/Users/shiva/Code/inkmonk/webapp/inkmonkweb/static/clients/MarketV2';
+  '/Users/juspay/Code/juspay/rescript-euler-dashboard';
 const babelPrefix = 'npm@/babel-loader/lib/index.js!';
 
 function useStatJSON() {
-  const [statJSON, useStatJSON] = useState(null);
+  const [statJSON, setStatJSON] = useState(null);
 
   useEffect(() => {
     import(
-      '/Users/shiva/Code/inkmonk/webapp/inkmonkweb/static/clients/MarketV2/stats.json'
-    ).then(json => useStatJSON(json.default));
+      '/Users/juspay/Code/juspay/rescript-euler-dashboard/stat.json'
+    ).then(json => setStatJSON(json.default));
   }, []);
 
   return statJSON;
