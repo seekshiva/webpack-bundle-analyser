@@ -3,28 +3,6 @@
 @module("./AppFiles.js") @val
 external useStatJSON: unit => Js.Nullable.t<Js.Json.t> = "useStatJSON"
 
-module ShowChunk = {
-  @module("./AppFiles.js") @react.component
-  external make: (~match: ReactRouter.matchType, ~json: Js.Json.t) => React.element = "ShowChunk"
-}
-module ModuleList = {
-  @module("./AppFiles.js") @react.component
-  external make: (~match: ReactRouter.matchType, ~json: Js.Json.t) => React.element = "ModuleList"
-}
-module ShowModule = {
-  @module("./AppFiles.js") @react.component
-  external make: (~match: ReactRouter.matchType, ~json: Js.Json.t) => React.element = "ShowModule"
-}
-
-module Tabs = {
-  @module("./AppFiles.js") @react.component
-  external make: (
-    ~match: ReactRouter.matchType,
-    ~currentTab: string,
-    ~setTab: (string => string) => unit,
-  ) => React.element = "Tabs"
-}
-
 let styles = ReactNative.createStyleSheet({
   "container": {
     "flex": 1,

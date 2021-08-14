@@ -23,7 +23,7 @@ module View = {
 }
 module Button = {
   @module("react-native") @react.component
-  external make: unit => React.element = "Button"
+  external make: (~title: string, ~onPress: unit => unit) => React.element = "Button"
 }
 module ScrollView = {
   @module("react-native") @react.component

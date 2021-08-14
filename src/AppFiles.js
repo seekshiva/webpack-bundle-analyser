@@ -66,28 +66,6 @@ function ModuleItem({ item: webpackModule, parentModule, index }) {
   );
 }
 
-const tabList = ['chunks', 'modules'];
-
-export function Tabs({ currentTab, setTab, match }) {
-  const isModulesListPage = match.path === '/modules';
-  const isChunkListPage = match.path === '/chunks' || match.path === '/';
-  const isChunkShowPage = match.path === '/chunks' || match.path === '/';
-  const isCurrentTabInList = tabList.includes(currentTab);
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      {tabList.map((item, index) => (
-        <Button
-          key={index}
-          title={currentTab === item ? `"${item}"` : `${item}`}
-          onPress={() => setTab(item)}
-        />
-      ))}
-      {!isCurrentTabInList && (
-        <Button title={`"${currentTab}"`} onPress={() => setTab(currentTab)} />
-      )}
-    </View>
-  );
-}
 
 function ChunkInfo({ activeChunk, setTab }) {
   return (
