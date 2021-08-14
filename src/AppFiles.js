@@ -119,14 +119,6 @@ const sortBySize = (modA, modB) =>
   modA.size < modB.size ? 1 : modA.size > modB.size ? -1 : 0;
 
 
-export function ModuleList({ json }) {
-  const data = useMemo(() => json.modules.sort(sortBySize), [json.modules]);
-  return (
-    <View style={{ flex: 1 }}>
-      <FlatList data={data} renderItem={ModuleItem} style={{ flex: 1 }} />
-    </View>
-  );
-}
 
 export function ShowChunk({ json, match }) {
   const chunkID = Number(match.params.chunkID);

@@ -24,7 +24,7 @@ module Link = {
   @module("react-router-dom") @react.component
   external make: (
     ~to: string,
-    ~style: ReactNative.rnStyle,
+    ~style: ReactNative.rnStyle=?,
     ~children: React.element,
   ) => React.element = "Link"
 }

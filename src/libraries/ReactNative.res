@@ -9,7 +9,7 @@ module FlatList = {
   @module("react-native") @react.component
   external make: (
     ~data: array<Js.Json.t>,
-    ~renderItem: {"item": Js.Json.t} => React.element,
+    ~renderItem: {"item": Js.Json.t, "index": int} => React.element,
     ~style: rnStyle=?,
   ) => React.element = "FlatList"
 }

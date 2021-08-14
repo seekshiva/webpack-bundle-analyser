@@ -1,14 +1,11 @@
 external jsonToChunk: Js.Json.t => BundledJsonParser.chunk = "%identity"
 
-@send
-external padStart: (string, int) => string = "padStart"
-
 let chunkItem = arg => {
   let itemJson = arg["item"]
   let webpackChunk = itemJson->jsonToChunk
 
-  let chunkIDStr = `#${webpackChunk.id}`->padStart(4)
-  let sizeStr = webpackChunk.size->Belt.Int.toString->padStart(6)
+  let chunkIDStr = `#${webpackChunk.id}`->Utils.padStart(4)
+  let sizeStr = webpackChunk.size->Belt.Int.toString->Utils.padStart(6)
 
   let modulesLenStr = webpackChunk.modules->Js.Array.length->Belt.Int.toString
 
@@ -27,12 +24,6 @@ let chunkItem = arg => {
   </View>
 }
 
-let sortBySize = (modAJson, modBJson) => {
-  let modA = modAJson->jsonToChunk
-  let modB = modBJson->jsonToChunk
-  modA.size < modB.size ? 1 : modA.size > modB.size ? -1 : 0
-}
-
 @react.component
 let make = (~json, ~match as _) => {
   let data = React.useMemo1(() => {
@@ -41,7 +32,7 @@ let make = (~json, ~match as _) => {
     ->Belt.Option.flatMap(Js.Dict.get(_, "chunks"))
     ->Belt.Option.flatMap(Js.Json.decodeArray)
     ->Belt.Option.getWithDefault([])
-    ->Js.Array.sortInPlaceWith(sortBySize, _)
+    ->Js.Array.sortInPlaceWith(Utils.sortBySize, _)
   }, [json])
 
   open ReactNative
