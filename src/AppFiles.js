@@ -66,26 +66,6 @@ function ModuleItem({ item: webpackModule, parentModule, index }) {
   );
 }
 
-export function ChunkItem({ item: webpackChunk, setTab }) {
-  const chunkIDStr = `#${webpackChunk.id}`.padStart(4);
-  const sizeStr = `${webpackChunk.size}`.padStart(6);
-
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 5 }}>
-      <Link
-        to={`/chunks/${webpackChunk.id}`}
-        style={{ fontFamily: 'monospace' }}
-      >
-        Chunk {chunkIDStr}
-      </Link>
-      <Text>
-        &nbsp;[size: {sizeStr}]&nbsp;{webpackChunk.reason} (
-        {webpackChunk.modules.length} modules)
-      </Text>
-    </View>
-  );
-}
-
 const tabList = ['chunks', 'modules'];
 
 export function Tabs({ currentTab, setTab, match }) {

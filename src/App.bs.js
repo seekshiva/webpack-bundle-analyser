@@ -13,49 +13,6 @@ function useStatJSON(prim) {
   return AppFilesJs.useStatJSON();
 }
 
-function chunkItem(prim) {
-  return AppFilesJs.ChunkItem(prim);
-}
-
-function sortBySize(modAJson, modBJson) {
-  if (modAJson.size < modBJson.size) {
-    return 1;
-  } else if (modAJson.size > modBJson.size) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
-
-function App$ChunkList(Props) {
-  var json = Props.json;
-  var data = React.useMemo((function () {
-          var __x = Belt_Option.getWithDefault(Belt_Option.flatMap(Belt_Option.flatMap(Js_json.decodeObject(json), (function (__x) {
-                          return Js_dict.get(__x, "chunks");
-                        })), Js_json.decodeArray), []);
-          return __x.sort(sortBySize);
-        }), [json]);
-  return React.createElement(ReactNative.View, {
-              style: {
-                flex: 1,
-                overflow: "scroll"
-              },
-              children: React.createElement(ReactNative.FlatList, {
-                    data: data,
-                    renderItem: chunkItem,
-                    style: {
-                      flex: 1
-                    }
-                  })
-            });
-}
-
-var ChunkList = {
-  chunkItem: chunkItem,
-  sortBySize: sortBySize,
-  make: App$ChunkList
-};
-
 var make = AppFilesJs.ShowChunk;
 
 var ShowChunk = {
@@ -109,6 +66,69 @@ function App$Text(Props) {
 
 var $$Text = {
   make: App$Text
+};
+
+function chunkItem(arg) {
+  var itemJson = arg.item;
+  var chunkIDStr = ("#" + itemJson.id).padStart(4);
+  var sizeStr = String(itemJson.size).padStart(6);
+  var modulesLenStr = String(itemJson.modules.length);
+  var chunkReason = Belt_Option.getWithDefault(Caml_option.nullable_to_opt(itemJson.reason), "");
+  return React.createElement(ReactNative.View, {
+              style: {
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 5
+              },
+              children: null
+            }, React.createElement(ReactRouterDom.Link, {
+                  to: "/chunks/" + itemJson.id,
+                  style: {
+                    fontFamily: "monospace"
+                  },
+                  children: "Chunk " + chunkIDStr
+                }), React.createElement(App$Text, {
+                  children: null
+                }, " ", "[size: " + sizeStr + "] " + chunkReason + " (" + modulesLenStr + " modules)"));
+}
+
+function sortBySize(modAJson, modBJson) {
+  if (modAJson.size < modBJson.size) {
+    return 1;
+  } else if (modAJson.size > modBJson.size) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
+function App$ChunkList(Props) {
+  var json = Props.json;
+  var data = React.useMemo((function () {
+          var __x = Belt_Option.getWithDefault(Belt_Option.flatMap(Belt_Option.flatMap(Js_json.decodeObject(json), (function (__x) {
+                          return Js_dict.get(__x, "chunks");
+                        })), Js_json.decodeArray), []);
+          return __x.sort(sortBySize);
+        }), [json]);
+  return React.createElement(ReactNative.View, {
+              style: {
+                flex: 1,
+                overflow: "scroll"
+              },
+              children: React.createElement(ReactNative.FlatList, {
+                    data: data,
+                    renderItem: chunkItem,
+                    style: {
+                      flex: 1
+                    }
+                  })
+            });
+}
+
+var ChunkList = {
+  chunkItem: chunkItem,
+  sortBySize: sortBySize,
+  make: App$ChunkList
 };
 
 function App$LoadedApp(Props) {
@@ -218,13 +238,13 @@ var $$default = App;
 
 export {
   useStatJSON ,
-  ChunkList ,
   ShowChunk ,
   ModuleList ,
   ShowModule ,
   Tabs ,
   styles ,
   $$Text ,
+  ChunkList ,
   LoadedApp ,
   make$4 as make,
   $$default ,

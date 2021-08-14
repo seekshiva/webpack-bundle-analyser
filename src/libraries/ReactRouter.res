@@ -22,5 +22,9 @@ module Switch = {
 
 module Link = {
   @module("react-router-dom") @react.component
-  external make: (~children: React.element) => React.element = "Link"
+  external make: (
+    ~to: string,
+    ~style: ReactNative.rnStyle,
+    ~children: React.element,
+  ) => React.element = "Link"
 }
