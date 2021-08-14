@@ -7,16 +7,16 @@ import {
   Button,
   ScrollView,
 } from 'react-native';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import prettier from 'prettier/standalone';
 
 document.body.style.margin = 0;
 document.body.style['overflow-y'] = 'hidden';
-document.body.position = 'fixed';
-document.body.display = 'flex';
-document.body.flexDirection = 'column';
-document.body.width = '100%';
-document.body.height = '100%';
+document.body.style.position = 'fixed';
+document.body.style.display = 'flex';
+document.body.style.flexDirection = 'column';
+document.body.style.width = '100%';
+document.body.style.height = '100%';
 
 function Text(props) {
   return (
@@ -66,8 +66,6 @@ function ModuleItem({ item: webpackModule, parentModule, index }) {
   );
 }
 
-
-
 function ModuleInfo({ activeModule, setTab }) {
   return (
     <View>
@@ -84,9 +82,6 @@ function ModuleInfo({ activeModule, setTab }) {
 
 const sortBySize = (modA, modB) =>
   modA.size < modB.size ? 1 : modA.size > modB.size ? -1 : 0;
-
-
-
 
 export function ShowModule({ json, match }) {
   const moduleID = Number(match.params.moduleID);
