@@ -5,17 +5,11 @@ import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
+import * as ChunkInfo from "./ChunkInfo.bs.js";
 import * as ModuleItem from "./ModuleItem.bs.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactNative from "react-native";
-import * as AppFilesJs from "../AppFiles.js";
-
-var make = AppFilesJs.ChunkInfo;
-
-var ChunkInfo = {
-  make: make
-};
 
 var styles = ReactNative.StyleSheet.create({
       centeredContent: {
@@ -51,7 +45,7 @@ function ShowChunk(Props) {
                 children: null
               }, React.createElement(ReactNative.View, {
                     style: styles.centeredContent,
-                    children: React.createElement(make, {
+                    children: React.createElement(ChunkInfo.make, {
                           activeChunk: optionalMatchingChunk
                         })
                   }), React.createElement(ReactNative.FlatList, {
@@ -72,12 +66,11 @@ function ShowChunk(Props) {
   return "no matching chunk. " + chunkIdStr + " " + typeofChunkId;
 }
 
-var make$1 = ShowChunk;
+var make = ShowChunk;
 
 export {
-  ChunkInfo ,
   styles ,
-  make$1 as make,
+  make ,
   
 }
-/* make Not a pure module */
+/* styles Not a pure module */

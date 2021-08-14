@@ -67,39 +67,6 @@ function ModuleItem({ item: webpackModule, parentModule, index }) {
 }
 
 
-export function ChunkInfo({ activeChunk, setTab }) {
-  return (
-    <View>
-      <Text>
-        Chunk #{activeChunk.id}: [size {activeChunk.size}] {activeChunk.reason}{' '}
-        ({activeChunk.modules.length} modules) : {activeChunk.files.join(', ')}
-      </Text>
-      <View>
-        <Text>Parent Chunks:</Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          {activeChunk.parents.map(parentID => (
-            <Button
-              key={parentID}
-              title={`${parentID}`}
-              onPress={() => setTab(`chunks:${parentID}`)}
-            />
-          ))}
-        </View>
-      </View>
-      <View>
-        <Text>Children Chunks:</Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          {activeChunk.children.map(childChunkID => (
-            <Button
-              title={`${childChunkID}`}
-              onPress={() => setTab(`chunks:${childChunkID}`)}
-            />
-          ))}
-        </View>
-      </View>
-    </View>
-  );
-}
 
 function ModuleInfo({ activeModule, setTab }) {
   return (

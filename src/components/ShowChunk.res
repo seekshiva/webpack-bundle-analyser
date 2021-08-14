@@ -1,10 +1,5 @@
 external jsonToChunk: Js.Json.t => BundledJsonParser.chunk = "%identity"
 
-module ChunkInfo = {
-  @module("../AppFiles.js") @react.component
-  external make: (~activeChunk: BundledJsonParser.chunk) => React.element = "ChunkInfo"
-}
-
 let styles = ReactNative.createStyleSheet({
   "centeredContent": {
     "alignItems": "center",
