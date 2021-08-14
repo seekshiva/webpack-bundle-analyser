@@ -1,4 +1,4 @@
-type chunk = {id: string}
+type chunk = {id: string, size: int, reason: Js.Nullable.t<string>, modules: array<int>}
 
 type statInfo = {
   hash: string,
