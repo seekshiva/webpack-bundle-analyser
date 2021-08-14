@@ -10,9 +10,6 @@ import {
 } from 'react-native';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import prettier from 'prettier/standalone';
-import babylon from 'prettier/parser-babylon';
-
-const plugins = [babylon];
 
 document.body.style.margin = 0;
 document.body.style['overflow-y'] = 'hidden';
