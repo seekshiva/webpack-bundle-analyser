@@ -4,8 +4,34 @@
 external useStatJSON: unit => Js.Nullable.t<Js.Json.t> = "useStatJSON"
 
 module ChunkList = {
-  @module("./AppFiles.js") @react.component
-  external make: (~match: ReactRouter.matchType, ~json: Js.Json.t) => React.element = "ChunkList"
+  type chunk = {size: int}
+  external jsonToChunk: Js.Json.t => chunk = "%identity"
+
+  @module("./AppFiles.js")
+  external chunkItem: {"item": Js.Json.t} => React.element = "ChunkItem"
+
+  let sortBySize = (modAJson, modBJson) => {
+    let modA = modAJson->jsonToChunk
+    let modB = modBJson->jsonToChunk
+    modA.size < modB.size ? 1 : modA.size > modB.size ? -1 : 0
+  }
+
+  @react.component
+  let make = (~json, ~match as _) => {
+    let data = React.useMemo1(() => {
+      json
+      ->Js.Json.decodeObject
+      ->Belt.Option.flatMap(Js.Dict.get(_, "chunks"))
+      ->Belt.Option.flatMap(Js.Json.decodeArray)
+      ->Belt.Option.getWithDefault([])
+      ->Js.Array.sortInPlaceWith(sortBySize, _)
+    }, [json])
+
+    open ReactNative
+    <View style={objToRnStyle({"flex": 1, "overflow": "scroll"})}>
+      <FlatList data={data} renderItem={chunkItem} style={objToRnStyle({"flex": 1})} />
+    </View>
+  }
 }
 module ShowChunk = {
   @module("./AppFiles.js") @react.component

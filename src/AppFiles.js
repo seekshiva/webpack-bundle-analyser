@@ -66,7 +66,7 @@ function ModuleItem({ item: webpackModule, parentModule, index }) {
   );
 }
 
-function ChunkItem({ item: webpackChunk, setTab }) {
+export function ChunkItem({ item: webpackChunk, setTab }) {
   const chunkIDStr = `#${webpackChunk.id}`.padStart(4);
   const sizeStr = `${webpackChunk.size}`.padStart(6);
 
@@ -160,14 +160,6 @@ function ModuleInfo({ activeModule, setTab }) {
 const sortBySize = (modA, modB) =>
   modA.size < modB.size ? 1 : modA.size > modB.size ? -1 : 0;
 
-export function ChunkList({ json }) {
-  const data = useMemo(() => json.chunks.sort(sortBySize), [json.chunks]);
-  return (
-    <View style={{ flex: 1 }}>
-      <FlatList data={data} renderItem={ChunkItem} style={{ flex: 1 }} />
-    </View>
-  );
-}
 
 export function ModuleList({ json }) {
   const data = useMemo(() => json.modules.sort(sortBySize), [json.modules]);

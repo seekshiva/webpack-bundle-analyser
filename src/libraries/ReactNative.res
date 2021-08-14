@@ -7,7 +7,11 @@ module ActivityIndicator = {
 
 module FlatList = {
   @module("react-native") @react.component
-  external make: unit => React.element = "FlatList"
+  external make: (
+    ~data: array<Js.Json.t>,
+    ~renderItem: {"item": Js.Json.t} => React.element,
+    ~style: rnStyle=?,
+  ) => React.element = "FlatList"
 }
 module ReactNativeText = {
   @module("react-native") @react.component
@@ -31,3 +35,5 @@ external createStyleSheet: {..} => {..} = "create"
 
 @module("react-native") @scope("StyleSheet")
 external flattenStyles: array<Js.Nullable.t<{..}>> => rnStyle = "flatten"
+
+external objToRnStyle: {..} => rnStyle = "%identity"
