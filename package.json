@@ -5,9 +5,13 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "re:build": "rescript",
+    "re:clean": "rescript clean",
+    "re:start": "rescript build -w"
   },
   "dependencies": {
+    "@rescript/react": "^0.10.3",
     "expo": "^42.0.3",
     "prettier": "^2.3.2",
     "react": "17.0.2",
@@ -18,7 +22,8 @@
     "react-router-dom": "^5.0.1"
   },
   "devDependencies": {
-    "babel-preset-expo": "^8.4.1"
+    "babel-preset-expo": "^8.4.1",
+    "rescript": "^9.1.4"
   },
   "private": true
 }

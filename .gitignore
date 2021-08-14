@@ -8,3 +8,6 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
+lib/bs
+.merlin
+.bsb.lock
