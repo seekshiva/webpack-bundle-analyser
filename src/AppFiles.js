@@ -7,7 +7,7 @@ import {
   Button,
   ScrollView,
 } from 'react-native';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
 import prettier from 'prettier/standalone';
 
 document.body.style.margin = 0;
@@ -59,7 +59,7 @@ function ModuleItem({ item: webpackModule, parentModule, index }) {
       ? `/modules/${parentModuleID}/${index}`
       : `/modules/${webpackModule.id}`;
   return (
-    <Text style={{ fontFamily: 'monospace' }}>
+    <Text>
       <Link to={to}>{idStr}</Link>: [size: {sizeStr}
       ]: {str}
     </Text>
@@ -88,7 +88,7 @@ function ChunkItem({ item: webpackChunk, setTab }) {
 
 const tabList = ['chunks', 'modules'];
 
-function Tabs({ currentTab, setTab, match }) {
+export function Tabs({ currentTab, setTab, match }) {
   const isModulesListPage = match.path === '/modules';
   const isChunkListPage = match.path === '/chunks' || match.path === '/';
   const isChunkShowPage = match.path === '/chunks' || match.path === '/';
@@ -160,7 +160,7 @@ function ModuleInfo({ activeModule, setTab }) {
 const sortBySize = (modA, modB) =>
   modA.size < modB.size ? 1 : modA.size > modB.size ? -1 : 0;
 
-function ChunkList({ json }) {
+export function ChunkList({ json }) {
   const data = useMemo(() => json.chunks.sort(sortBySize), [json.chunks]);
   return (
     <View style={{ flex: 1 }}>
@@ -169,7 +169,7 @@ function ChunkList({ json }) {
   );
 }
 
-function ModuleList({ json }) {
+export function ModuleList({ json }) {
   const data = useMemo(() => json.modules.sort(sortBySize), [json.modules]);
   return (
     <View style={{ flex: 1 }}>
@@ -178,7 +178,7 @@ function ModuleList({ json }) {
   );
 }
 
-function ShowChunk({ json, match }) {
+export function ShowChunk({ json, match }) {
   const chunkID = Number(match.params.chunkID);
   const matchingChunk = json.chunks.find(c => c.id === chunkID);
   if (!matchingChunk) {
@@ -198,7 +198,7 @@ function ShowChunk({ json, match }) {
   );
 }
 
-function ShowModule({ json, match }) {
+export function ShowModule({ json, match }) {
   const moduleID = Number(match.params.moduleID);
   const subModuleIndex = Number(match.params.subModuleIndex);
   let matchingModule = json.modules.find(c => c.id === moduleID);
@@ -235,54 +235,6 @@ function ShowModule({ json, match }) {
           style={{ flex: 1 }}
         />
       )}
-    </View>
-  );
-}
-
-export function LoadedApp({ json }) {
-  const [currentTab, setTab] = useState('chunks');
-  return (
-    <View style={styles.container}>
-      <View style={styles.centeredContent}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Route
-          render={props => (
-            <Tabs {...props} currentTab={currentTab} setTab={setTab} />
-          )}
-        />
-      </View>
-      <Switch>
-        <Route
-          path="/"
-          exact
-          render={props => <ChunkList {...props} json={json} />}
-        />
-        <Route
-          path="/chunks"
-          exact
-          render={props => <ChunkList {...props} json={json} />}
-        />
-        <Route
-          path="/chunks/:chunkID"
-          exact
-          render={props => <ShowChunk {...props} json={json} />}
-        />
-        <Route
-          path="/modules"
-          exact
-          render={props => <ModuleList {...props} json={json} />}
-        />
-        <Route
-          path="/modules/:moduleID"
-          exact
-          render={props => <ShowModule {...props} json={json} />}
-        />
-        <Route
-          path="/modules/:moduleID/:subModuleIndex"
-          exact
-          render={props => <ShowModule {...props} json={json} />}
-        />
-      </Switch>
     </View>
   );
 }

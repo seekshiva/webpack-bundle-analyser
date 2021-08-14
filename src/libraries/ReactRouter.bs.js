@@ -3,8 +3,17 @@
 
 var Router = {};
 
+var Route = {};
+
+var Switch = {};
+
+var Link = {};
+
 export {
   Router ,
+  Route ,
+  Switch ,
+  Link ,
   
 }
 /* No side effect */
