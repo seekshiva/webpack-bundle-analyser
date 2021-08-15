@@ -8,6 +8,15 @@ type chunk = {
   children: array<string>,
 }
 
+type rec webpackModule = {
+  id: Js.Nullable.t<int>,
+  size: int,
+  identifier: string,
+  modules: Js.Nullable.t<array<webpackModule>>,
+  source: Js.Nullable.t<string>,
+  reason: Js.Nullable.t<string>,
+}
+
 type statInfo = {
   hash: string,
   version: string,

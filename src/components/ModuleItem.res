@@ -1,6 +1,4 @@
-type webpackModule = {id: Js.Nullable.t<string>, size: int, identifier: string}
-
-external jsonToModule: Js.Json.t => webpackModule = "%identity"
+external jsonToModule: Js.Json.t => BundledJsonParser.webpackModule = "%identity"
 
 let appProjectRoot = "/Users/juspay/Code/juspay/rescript-euler-dashboard"
 let babelPrefix = "npm@/babel-loader/lib/index.js!"
@@ -21,10 +19,14 @@ let moduleItem = (~parentModule as optionalParentModule=None, arg) => {
     ->Js.String.replaceByRe(Js.Re.fromStringWithFlags(babelPrefix, ~flags="g"), "babel << ", _)
     ->Js.String.replaceByRe(%re("/\ [a-z0-9]{32}/"), "", _)
   let optionalParentModuleID =
-    optionalParentModule->Belt.Option.flatMap(parentModule => parentModule.id->Js.Nullable.toOption)
+    optionalParentModule
+    ->Belt.Option.flatMap((parentModule: BundledJsonParser.webpackModule) =>
+      parentModule.id->Js.Nullable.toOption
+    )
+    ->Belt.Option.map(Belt.Int.toString)
   let parentModuleIDStr = optionalParentModuleID->Belt.Option.getWithDefault("--")
   let idVal = switch webpackModule.id->Js.Nullable.toOption {
-  | Some(moduleId) => moduleId
+  | Some(moduleId) => moduleId->Belt.Int.toString
   | None => `${parentModuleIDStr}<${index}>`
   }
   let idStr = `M${idVal}`->Utils.padStart(6)
@@ -33,7 +35,7 @@ let moduleItem = (~parentModule as optionalParentModule=None, arg) => {
   let to_ = switch optionalParentModuleID {
   | Some(parentModuleID) => `/modules/${parentModuleID}/${index}`
   | None =>
-    switch webpackModule.id->Js.Nullable.toOption {
+    switch webpackModule.id->Js.Nullable.toOption->Belt.Option.map(Belt.Int.toString) {
     | Some(moduleId) => `/modules/${moduleId}`
     | None => "/modules/"
     }

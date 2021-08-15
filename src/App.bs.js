@@ -92,8 +92,8 @@ function App$LoadedApp(Props) {
                       exact: true,
                       render: (function (param) {
                           return React.createElement(ShowModule.make, {
-                                      match: param.match,
-                                      json: json
+                                      json: json,
+                                      match: param.match
                                     });
                         })
                     }), React.createElement(ReactRouterDom.Route, {
@@ -101,8 +101,8 @@ function App$LoadedApp(Props) {
                       exact: true,
                       render: (function (param) {
                           return React.createElement(ShowModule.make, {
-                                      match: param.match,
-                                      json: json
+                                      json: json,
+                                      match: param.match
                                     });
                         })
                     })));

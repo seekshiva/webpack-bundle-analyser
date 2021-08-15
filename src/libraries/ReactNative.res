@@ -27,7 +27,7 @@ module Button = {
 }
 module ScrollView = {
   @module("react-native") @react.component
-  external make: unit => React.element = "ScrollView"
+  external make: (~style: rnStyle=?, ~children: React.element=?) => React.element = "ScrollView"
 }
 
 @module("react-native") @scope("StyleSheet")

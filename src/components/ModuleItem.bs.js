@@ -19,20 +19,24 @@ function moduleItem(optionalParentModuleOpt, arg) {
   var __x$2 = __x$1.replace(new RegExp(appProjectRoot, "g"), "MarketV2@");
   var __x$3 = __x$2.replace(new RegExp(babelPrefix, "g"), "babel << ");
   var str = __x$3.replace(/ [a-z0-9]{32}/, "");
-  var optionalParentModuleID = Belt_Option.flatMap(optionalParentModule, (function (parentModule) {
-          return Caml_option.nullable_to_opt(parentModule.id);
+  var optionalParentModuleID = Belt_Option.map(Belt_Option.flatMap(optionalParentModule, (function (parentModule) {
+              return Caml_option.nullable_to_opt(parentModule.id);
+            })), (function (prim) {
+          return String(prim);
         }));
   var parentModuleIDStr = Belt_Option.getWithDefault(optionalParentModuleID, "--");
   var moduleId = item.id;
-  var idVal = (moduleId == null) ? parentModuleIDStr + "<" + index + ">" : moduleId;
+  var idVal = (moduleId == null) ? parentModuleIDStr + "<" + index + ">" : String(moduleId);
   var idStr = ("M" + idVal).padStart(6);
   var sizeStr = String(item.size).padStart(6);
   var to_;
   if (optionalParentModuleID !== undefined) {
     to_ = "/modules/" + optionalParentModuleID + "/" + index;
   } else {
-    var moduleId$1 = item.id;
-    to_ = (moduleId$1 == null) ? "/modules/" : "/modules/" + moduleId$1;
+    var moduleId$1 = Belt_Option.map(Caml_option.nullable_to_opt(item.id), (function (prim) {
+            return String(prim);
+          }));
+    to_ = moduleId$1 !== undefined ? "/modules/" + moduleId$1 : "/modules/";
   }
   return React.createElement($$Text.make, {
               children: null
