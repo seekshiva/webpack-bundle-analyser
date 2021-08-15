@@ -7,9 +7,7 @@ let styles = ReactNative.createStyleSheet({
 })
 
 @react.component
-let make = (~json: Js.Json.t, ~match: ReactRouter.matchType) => {
-  let optionalChunkID =
-    match.params->Js.Dict.get("chunkID")->Belt.Option.flatMap(Belt.Int.fromString)
+let make = (~json: Js.Json.t, ~chunkID: int) => {
   let chunks =
     json
     ->Js.Json.decodeObject
@@ -18,9 +16,8 @@ let make = (~json: Js.Json.t, ~match: ReactRouter.matchType) => {
     ->Belt.Option.getWithDefault([])
     ->Js.Array.map(jsonToChunk, _)
 
-  let optionalMatchingChunk = optionalChunkID->Belt.Option.flatMap(chunkID => {
+  let optionalMatchingChunk =
     chunks->Js.Array.find((chunk: BundledJsonParser.chunk) => chunk.id === chunkID, _)
-  })
 
   switch optionalMatchingChunk {
   | Some(matchingChunk) => {
@@ -40,13 +37,8 @@ let make = (~json: Js.Json.t, ~match: ReactRouter.matchType) => {
       </View>
     }
   | None =>
-    switch optionalChunkID {
-    | Some(chunkId) => {
-        let chunkIdStr = chunkId->Belt.Int.toString
-        let typeofChunkId = Js.typeof(chunkId)
-        React.string(`no matching chunk. ${chunkIdStr} ${typeofChunkId}`)
-      }
-    | None => React.string("no chunk found. No chunk ID in url")
-    }
+    let chunkIdStr = chunkID->Belt.Int.toString
+    let typeofChunkId = Js.typeof(chunkID)
+    React.string(`no matching chunk. ${chunkIdStr} ${typeofChunkId}`)
   }
 }

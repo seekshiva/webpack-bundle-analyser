@@ -5,7 +5,6 @@ import * as Utils from "../Utils.bs.js";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
-import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Caml_array from "rescript/lib/es6/caml_array.js";
 import * as ModuleItem from "./ModuleItem.bs.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
@@ -96,40 +95,34 @@ var ShowModuleInternal = {
 
 function ShowModule(Props) {
   var json = Props.json;
-  var match = Props.match;
-  var optionalModuleID = Belt_Option.flatMap(Js_dict.get(match.params, "moduleID"), Belt_Int.fromString);
-  var optionalSubModuleIndex = Belt_Option.flatMap(Js_dict.get(match.params, "subModuleIndex"), Belt_Int.fromString);
+  var moduleID = Props.moduleID;
+  var optionalSubModuleIndex = Props.subModuleIndex;
   var __x = Belt_Option.getWithDefault(Belt_Option.flatMap(Belt_Option.flatMap(Js_json.decodeObject(json), (function (__x) {
                   return Js_dict.get(__x, "modules");
                 })), Js_json.decodeArray), []);
   var modules = __x.map(function (prim) {
         return prim;
       });
-  var optionalMatchingModule = Belt_Option.flatMap(optionalModuleID, (function (moduleID) {
-          return Caml_option.undefined_to_opt(modules.find(function (webpackModule) {
-                          var id = webpackModule.id;
-                          if (id == null) {
-                            return false;
-                          } else {
-                            return (
-                                    (id == null) ? undefined : Caml_option.some(id)
-                                  ) === moduleID;
-                          }
-                        }));
-        }));
+  var optionalMatchingModule = modules.find(function (webpackModule) {
+        var id = webpackModule.id;
+        if (id == null) {
+          return false;
+        } else {
+          return (
+                  (id == null) ? undefined : Caml_option.some(id)
+                ) === moduleID;
+        }
+      });
+  var optionalMatchingModule$1 = optionalMatchingModule === undefined ? undefined : Caml_option.some(optionalMatchingModule);
   if (optionalMatchingModule === undefined) {
-    if (optionalModuleID !== undefined) {
-      return "no matching chunk. " + String(optionalModuleID) + " " + typeof optionalModuleID;
-    } else {
-      return "moduleID not found in url param";
-    }
+    return "no matching chunk. " + String(moduleID) + " " + typeof moduleID;
   }
   var matchingModule;
   if (optionalSubModuleIndex !== undefined) {
-    var subModulesArr = Belt_Option.getWithDefault(Caml_option.nullable_to_opt(optionalMatchingModule.modules), []);
-    matchingModule = optionalSubModuleIndex < subModulesArr.length ? Caml_array.get(subModulesArr, optionalSubModuleIndex) : optionalMatchingModule;
+    var subModulesArr = Belt_Option.getWithDefault(Caml_option.nullable_to_opt(optionalMatchingModule$1.modules), []);
+    matchingModule = optionalSubModuleIndex < subModulesArr.length ? Caml_array.get(subModulesArr, optionalSubModuleIndex) : optionalMatchingModule$1;
   } else {
-    matchingModule = optionalMatchingModule;
+    matchingModule = optionalMatchingModule$1;
   }
   return React.createElement(ShowModule$ShowModuleInternal, {
               matchingModule: matchingModule

@@ -41,7 +41,6 @@ let moduleItem = (~parentModule as optionalParentModule=None, arg) => {
     }
   }
 
-  open ReactRouter
   <Text>
     <Link to={to_}> {React.string(idStr)} </Link> {React.string(`: [size: ${sizeStr}]: ${str}`)}
   </Text>

@@ -4,7 +4,6 @@ import * as Utils from "../Utils.bs.js";
 import * as React from "react";
 import * as Js_dict from "rescript/lib/es6/js_dict.js";
 import * as Js_json from "rescript/lib/es6/js_json.js";
-import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as ChunkInfo from "./ChunkInfo.bs.js";
 import * as ModuleItem from "./ModuleItem.bs.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
@@ -19,24 +18,22 @@ var styles = ReactNative.StyleSheet.create({
 
 function ShowChunk(Props) {
   var json = Props.json;
-  var match = Props.match;
-  var optionalChunkID = Belt_Option.flatMap(Js_dict.get(match.params, "chunkID"), Belt_Int.fromString);
+  var chunkID = Props.chunkID;
   var __x = Belt_Option.getWithDefault(Belt_Option.flatMap(Belt_Option.flatMap(Js_json.decodeObject(json), (function (__x) {
                   return Js_dict.get(__x, "chunks");
                 })), Js_json.decodeArray), []);
   var chunks = __x.map(function (prim) {
         return prim;
       });
-  var optionalMatchingChunk = Belt_Option.flatMap(optionalChunkID, (function (chunkID) {
-          return Caml_option.undefined_to_opt(chunks.find(function (chunk) {
-                          return chunk.id === chunkID;
-                        }));
-        }));
+  var optionalMatchingChunk = chunks.find(function (chunk) {
+        return chunk.id === chunkID;
+      });
+  var optionalMatchingChunk$1 = optionalMatchingChunk === undefined ? undefined : Caml_option.some(optionalMatchingChunk);
   if (optionalMatchingChunk !== undefined) {
     var data = React.useMemo((function () {
-            var __x = optionalMatchingChunk.modules;
+            var __x = optionalMatchingChunk$1.modules;
             return __x.sort(Utils.sortBySize);
-          }), [optionalMatchingChunk]);
+          }), [optionalMatchingChunk$1]);
     var partial_arg = Caml_option.some(undefined);
     return React.createElement(ReactNative.View, {
                 style: {
@@ -46,7 +43,7 @@ function ShowChunk(Props) {
               }, React.createElement(ReactNative.View, {
                     style: styles.centeredContent,
                     children: React.createElement(ChunkInfo.make, {
-                          activeChunk: optionalMatchingChunk
+                          activeChunk: optionalMatchingChunk$1
                         })
                   }), React.createElement(ReactNative.FlatList, {
                     data: data,
@@ -58,11 +55,8 @@ function ShowChunk(Props) {
                     }
                   }));
   }
-  if (optionalChunkID === undefined) {
-    return "no chunk found. No chunk ID in url";
-  }
-  var chunkIdStr = String(optionalChunkID);
-  var typeofChunkId = typeof optionalChunkID;
+  var chunkIdStr = String(chunkID);
+  var typeofChunkId = typeof chunkID;
   return "no matching chunk. " + chunkIdStr + " " + typeofChunkId;
 }
 

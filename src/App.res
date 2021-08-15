@@ -37,29 +37,45 @@ module LoadedApp = {
   @react.component
   let make = (~json: Js.Json.t) => {
     let (currentTab, setTab) = React.useState(() => "chunks")
+    let url = RescriptReactRouter.useUrl()
 
     open ReactNative
-    open ReactRouter
 
     <View style={styles["container"]}>
       <View style={styles["centeredContent"]}>
         <Text> {React.string("Open up App.js to start working on your app!")} </Text>
-        <Route render={({match}) => <Tabs match currentTab={currentTab} setTab={setTab} />} />
+        <Tabs currentTab={currentTab} setTab={setTab} />
       </View>
-      <Switch>
-        <Route path="/" exact=true render={({match}) => <ChunkList match json />} />
-        <Route path="/chunks" exact=true render={({match}) => <ChunkList match json />} />
-        <Route path="/chunks/:chunkID" exact=true render={({match}) => <ShowChunk match json />} />
-        <Route path="/modules" exact=true render={({match}) => <ModuleList match json />} />
-        <Route
-          path="/modules/:moduleID" exact=true render={({match}) => <ShowModule match json />}
-        />
-        <Route
-          path="/modules/:moduleID/:subModuleIndex"
-          exact=true
-          render={({match}) => <ShowModule match json />}
-        />
-      </Switch>
+      {switch url.path {
+      | list{"modules", moduleID, subModuleIndex} => {
+          let optionalModuleID = moduleID->Belt.Int.fromString
+          let optionalSubModuleIndex = subModuleIndex->Belt.Int.fromString
+
+          switch optionalModuleID {
+          | Some(moduleID) => <ShowModule moduleID subModuleIndex=?optionalSubModuleIndex json />
+          | None => React.string("moduleID needs to be of int type")
+          }
+        }
+      | list{"modules", moduleId} => {
+          let optionalModuleID = moduleId->Belt.Int.fromString
+
+          switch optionalModuleID {
+          | Some(moduleID) => <ShowModule moduleID json />
+          | None => React.string("no module id found in url")
+          }
+        }
+      | list{"modules"} => <ModuleList json />
+      | list{"chunks", chunkId} => {
+          let optionalChunkID = chunkId->Belt.Int.fromString
+          switch optionalChunkID {
+          | Some(chunkID) => <ShowChunk chunkID json />
+          | None => React.string("chunkId is expected to be int type")
+          }
+        }
+      | list{"chunks"} => <ChunkList json />
+      | list{} => <ChunkList json />
+      | _ => React.string("unknown page")
+      }}
     </View>
   }
 }
@@ -83,10 +99,7 @@ let make = () => {
   window["json"] = nullableJson
   Js.log2("json", nullableJson)
   switch nullableJson->Js.Nullable.toOption {
-  | Some(json) => {
-      open ReactRouter
-      <Router> <LoadedApp json={json} /> </Router>
-    }
+  | Some(json) => <LoadedApp json={json} />
   | None => {
       open ReactNative
       <ActivityIndicator />

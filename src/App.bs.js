@@ -4,12 +4,13 @@ import * as Tabs from "./components/Tabs.bs.js";
 import * as $$Text from "./components/Text.bs.js";
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
+import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as ChunkList from "./components/ChunkList.bs.js";
 import * as ShowChunk from "./components/ShowChunk.bs.js";
 import * as ModuleList from "./components/ModuleList.bs.js";
 import * as ShowModule from "./components/ShowModule.bs.js";
 import * as ReactNative from "react-native";
-import * as ReactRouterDom from "react-router-dom";
+import * as RescriptReactRouter from "@rescript/react/src/RescriptReactRouter.bs.js";
 
 function useStatJSON(param) {
   var match = React.useState(function () {
@@ -45,8 +46,74 @@ function App$LoadedApp(Props) {
   var match = React.useState(function () {
         return "chunks";
       });
-  var setTab = match[1];
-  var currentTab = match[0];
+  var url = RescriptReactRouter.useUrl(undefined, undefined);
+  var match$1 = url.path;
+  var tmp;
+  if (match$1) {
+    switch (match$1.hd) {
+      case "chunks" :
+          var match$2 = match$1.tl;
+          if (match$2) {
+            if (match$2.tl) {
+              tmp = "unknown page";
+            } else {
+              var optionalChunkID = Belt_Int.fromString(match$2.hd);
+              tmp = optionalChunkID !== undefined ? React.createElement(ShowChunk.make, {
+                      json: json,
+                      chunkID: optionalChunkID
+                    }) : "chunkId is expected to be int type";
+            }
+          } else {
+            tmp = React.createElement(ChunkList.make, {
+                  json: json
+                });
+          }
+          break;
+      case "modules" :
+          var match$3 = match$1.tl;
+          if (match$3) {
+            var match$4 = match$3.tl;
+            var moduleID = match$3.hd;
+            if (match$4) {
+              if (match$4.tl) {
+                tmp = "unknown page";
+              } else {
+                var optionalModuleID = Belt_Int.fromString(moduleID);
+                var optionalSubModuleIndex = Belt_Int.fromString(match$4.hd);
+                if (optionalModuleID !== undefined) {
+                  var tmp$1 = {
+                    json: json,
+                    moduleID: optionalModuleID
+                  };
+                  if (optionalSubModuleIndex !== undefined) {
+                    tmp$1.subModuleIndex = optionalSubModuleIndex;
+                  }
+                  tmp = React.createElement(ShowModule.make, tmp$1);
+                } else {
+                  tmp = "moduleID needs to be of int type";
+                }
+              }
+            } else {
+              var optionalModuleID$1 = Belt_Int.fromString(moduleID);
+              tmp = optionalModuleID$1 !== undefined ? React.createElement(ShowModule.make, {
+                      json: json,
+                      moduleID: optionalModuleID$1
+                    }) : "no module id found in url";
+            }
+          } else {
+            tmp = React.createElement(ModuleList.make, {
+                  json: json
+                });
+          }
+          break;
+      default:
+        tmp = "unknown page";
+    }
+  } else {
+    tmp = React.createElement(ChunkList.make, {
+          json: json
+        });
+  }
   return React.createElement(ReactNative.View, {
               style: styles.container,
               children: null
@@ -55,71 +122,10 @@ function App$LoadedApp(Props) {
                   children: null
                 }, React.createElement($$Text.make, {
                       children: "Open up App.js to start working on your app!"
-                    }), React.createElement(ReactRouterDom.Route, {
-                      render: (function (param) {
-                          return React.createElement(Tabs.make, {
-                                      currentTab: currentTab,
-                                      setTab: setTab,
-                                      match: param.match
-                                    });
-                        })
-                    })), React.createElement(ReactRouterDom.Switch, {
-                  children: null
-                }, React.createElement(ReactRouterDom.Route, {
-                      path: "/",
-                      exact: true,
-                      render: (function (param) {
-                          return React.createElement(ChunkList.make, {
-                                      json: json,
-                                      match: param.match
-                                    });
-                        })
-                    }), React.createElement(ReactRouterDom.Route, {
-                      path: "/chunks",
-                      exact: true,
-                      render: (function (param) {
-                          return React.createElement(ChunkList.make, {
-                                      json: json,
-                                      match: param.match
-                                    });
-                        })
-                    }), React.createElement(ReactRouterDom.Route, {
-                      path: "/chunks/:chunkID",
-                      exact: true,
-                      render: (function (param) {
-                          return React.createElement(ShowChunk.make, {
-                                      json: json,
-                                      match: param.match
-                                    });
-                        })
-                    }), React.createElement(ReactRouterDom.Route, {
-                      path: "/modules",
-                      exact: true,
-                      render: (function (param) {
-                          return React.createElement(ModuleList.make, {
-                                      json: json,
-                                      match: param.match
-                                    });
-                        })
-                    }), React.createElement(ReactRouterDom.Route, {
-                      path: "/modules/:moduleID",
-                      exact: true,
-                      render: (function (param) {
-                          return React.createElement(ShowModule.make, {
-                                      json: json,
-                                      match: param.match
-                                    });
-                        })
-                    }), React.createElement(ReactRouterDom.Route, {
-                      path: "/modules/:moduleID/:subModuleIndex",
-                      exact: true,
-                      render: (function (param) {
-                          return React.createElement(ShowModule.make, {
-                                      json: json,
-                                      match: param.match
-                                    });
-                        })
-                    })));
+                    }), React.createElement(Tabs.make, {
+                      currentTab: match[0],
+                      setTab: match[1]
+                    })), tmp);
 }
 
 var LoadedApp = {
@@ -144,10 +150,8 @@ function App(Props) {
   if (nullableJson == null) {
     return React.createElement(ReactNative.ActivityIndicator, {});
   } else {
-    return React.createElement(ReactRouterDom.BrowserRouter, {
-                children: React.createElement(App$LoadedApp, {
-                      json: nullableJson
-                    })
+    return React.createElement(App$LoadedApp, {
+                json: nullableJson
               });
   }
 }

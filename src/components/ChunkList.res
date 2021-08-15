@@ -13,11 +13,8 @@ let chunkItem = arg => {
   let chunkReason = webpackChunk.reason->Js.Nullable.toOption->Belt.Option.getWithDefault("")
 
   open ReactNative
-  open ReactRouter
   <View style={objToRnStyle({"flexDirection": "row", "alignItems": "center", "padding": 5})}>
-    <Link to={`/chunks/${chunkId}`} style={objToRnStyle({"fontFamily": "monospace"})}>
-      {React.string(`Chunk ${chunkIDStr}`)}
-    </Link>
+    <Link to={`/chunks/${chunkId}`}> {React.string(`Chunk ${chunkIDStr}`)} </Link>
     <Text>
       {React.string(" ")}
       {React.string(`[size: ${sizeStr}] ${chunkReason} (${modulesLenStr} modules)`)}
@@ -26,7 +23,7 @@ let chunkItem = arg => {
 }
 
 @react.component
-let make = (~json, ~match as _) => {
+let make = (~json) => {
   let data = React.useMemo1(() => {
     json
     ->Js.Json.decodeObject

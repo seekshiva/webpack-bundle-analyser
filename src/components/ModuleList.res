@@ -1,5 +1,5 @@
 @react.component
-let make = (~json: Js.Json.t, ~match as _: ReactRouter.matchType) => {
+let make = (~json: Js.Json.t) => {
   let data = React.useMemo1(() => {
     json
     ->Js.Json.decodeObject

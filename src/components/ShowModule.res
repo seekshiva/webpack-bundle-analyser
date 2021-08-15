@@ -73,13 +73,11 @@ module ShowModuleInternal = {
 }
 
 @react.component
-let make = (~json: Js.Json.t, ~match: ReactRouter.matchType) => {
-  let optionalModuleID =
-    match.params->Js.Dict.get("moduleID")->Belt.Option.flatMap(Belt.Int.fromString)
-  let optionalSubModuleIndex =
-    match.params->Js.Dict.get("subModuleIndex")->Belt.Option.flatMap(Belt.Int.fromString)
-  // let matchingModuleBase = json.modules.find(c => c.id === moduleID)
-
+let make = (
+  ~json: Js.Json.t,
+  ~moduleID: int,
+  ~subModuleIndex as optionalSubModuleIndex: option<int>=?,
+) => {
   let modules =
     json
     ->Js.Json.decodeObject
@@ -88,14 +86,13 @@ let make = (~json: Js.Json.t, ~match: ReactRouter.matchType) => {
     ->Belt.Option.getWithDefault([])
     ->Js.Array.map(jsonToModule, _)
 
-  let optionalMatchingModule = optionalModuleID->Belt.Option.flatMap(moduleID => {
+  let optionalMatchingModule =
     modules->Js.Array.find((webpackModule: BundledJsonParser.webpackModule) =>
       switch webpackModule.id->Js.Nullable.toOption {
       | Some(id) => id === moduleID
       | None => false
       }
     , _)
-  })
 
   switch optionalMatchingModule {
   | Some(matchingModuleBase) => {
@@ -114,11 +111,6 @@ let make = (~json: Js.Json.t, ~match: ReactRouter.matchType) => {
       <ShowModuleInternal matchingModule />
     }
 
-  | None =>
-    switch optionalModuleID {
-    | Some(moduleId) =>
-      React.string(`no matching chunk. ${moduleId->Belt.Int.toString} ${Js.typeof(moduleId)}`)
-    | None => React.string("moduleID not found in url param")
-    }
+  | None => React.string(`no matching chunk. ${moduleID->Belt.Int.toString} ${Js.typeof(moduleID)}`)
   }
 }

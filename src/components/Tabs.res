@@ -1,11 +1,7 @@
 let tabList = ["chunks", "modules"]
 
 @react.component
-let make = (
-  ~currentTab,
-  ~setTab: (string => string) => unit,
-  ~match as _: ReactRouter.matchType,
-) => {
+let make = (~currentTab, ~setTab: (string => string) => unit) => {
   // let isModulesListPage = match.path === "/modules"
   // let isChunkListPage = match.path === "/chunks" || match.path === "/"
   // let isChunkShowPage = match.path === "/chunks" || match.path === "/"
