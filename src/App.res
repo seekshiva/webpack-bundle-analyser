@@ -1,7 +1,26 @@
 @val external window: {..} = "window"
 
-@module("./AppFiles.js") @val
-external useStatJSON: unit => Js.Nullable.t<Js.Json.t> = "useStatJSON"
+type jsonModule = {default: Js.Json.t}
+
+@val
+external webpackDynamicImport: string => Js.Promise.t<jsonModule> = "import"
+
+let useStatJSON = () => {
+  let (statJSON, setStatJSON) = React.useState(() => Js.Nullable.null)
+
+  React.useEffect0(() => {
+    let _ =
+      webpackDynamicImport(
+        "/Users/juspay/Code/juspay/rescript-euler-dashboard/stat.json",
+      )->Js.Promise.then_(json => {
+        setStatJSON(_ => json.default->Js.Nullable.return)
+        Js.Promise.resolve(Js.Nullable.null)
+      }, _)
+    None
+  })
+
+  statJSON
+}
 
 let styles = ReactNative.createStyleSheet({
   "container": {
@@ -45,6 +64,19 @@ module LoadedApp = {
   }
 }
 
+@val @scope(("document", "body"))
+external bodyStyle: {..} = "style"
+
+let initializeBodyStyle = () => {
+  bodyStyle["margin"] = 0
+  bodyStyle["overflow-y"] = "hidden"
+  bodyStyle["position"] = "fixed"
+  bodyStyle["display"] = "flex"
+  bodyStyle["flexDirection"] = "column"
+  bodyStyle["width"] = "100%"
+  bodyStyle["height"] = "100%"
+}
+
 @react.component
 let make = () => {
   let nullableJson = useStatJSON()
@@ -61,5 +93,7 @@ let make = () => {
     }
   }
 }
+
+initializeBodyStyle()
 
 let default = make

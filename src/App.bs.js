@@ -2,17 +2,31 @@
 
 import * as Tabs from "./components/Tabs.bs.js";
 import * as $$Text from "./components/Text.bs.js";
+import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as ChunkList from "./components/ChunkList.bs.js";
 import * as ShowChunk from "./components/ShowChunk.bs.js";
 import * as ModuleList from "./components/ModuleList.bs.js";
 import * as ShowModule from "./components/ShowModule.bs.js";
 import * as ReactNative from "react-native";
-import * as AppFilesJs from "./AppFiles.js";
 import * as ReactRouterDom from "react-router-dom";
 
-function useStatJSON(prim) {
-  return AppFilesJs.useStatJSON();
+function useStatJSON(param) {
+  var match = React.useState(function () {
+        return null;
+      });
+  var setStatJSON = match[1];
+  React.useEffect((function () {
+          var __x = import("/Users/juspay/Code/juspay/rescript-euler-dashboard/stat.json");
+          __x.then(function (json) {
+                Curry._1(setStatJSON, (function (param) {
+                        return json.default;
+                      }));
+                return Promise.resolve(null);
+              });
+          
+        }), []);
+  return match[0];
 }
 
 var styles = ReactNative.StyleSheet.create({
@@ -112,8 +126,19 @@ var LoadedApp = {
   make: App$LoadedApp
 };
 
+function initializeBodyStyle(param) {
+  document.body.style.margin = 0;
+  document.body.style["overflow-y"] = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.display = "flex";
+  document.body.style.flexDirection = "column";
+  document.body.style.width = "100%";
+  document.body.style.height = "100%";
+  
+}
+
 function App(Props) {
-  var nullableJson = AppFilesJs.useStatJSON();
+  var nullableJson = useStatJSON(undefined);
   window.json = nullableJson;
   console.log("json", nullableJson);
   if (nullableJson == null) {
@@ -127,6 +152,8 @@ function App(Props) {
   }
 }
 
+initializeBodyStyle(undefined);
+
 var make = App;
 
 var $$default = App;
@@ -135,6 +162,7 @@ export {
   useStatJSON ,
   styles ,
   LoadedApp ,
+  initializeBodyStyle ,
   make ,
   $$default ,
   $$default as default,
