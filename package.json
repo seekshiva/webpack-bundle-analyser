@@ -1,11 +1,8 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "App.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject",
+    "start": "esbuild App.js --bundle --servedir=dist",
+    "build": "esbuild App.js --bundle --outfile=dist/bundle.js",
     "re:build": "rescript",
     "re:clean": "rescript clean",
     "re:start": "rescript build -w"
@@ -19,6 +16,7 @@
     "react-native-web": "^0.17.1"
   },
   "devDependencies": {
+    "esbuild": "^0.23.1",
     "rescript": "^9.1.4"
   },
   "private": true,
