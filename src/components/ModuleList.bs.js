@@ -7,7 +7,7 @@ import * as Js_json from "rescript/lib/es6/js_json.js";
 import * as ModuleItem from "./ModuleItem.bs.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import * as ReactNative from "react-native";
+import * as ReactNativeWeb from "react-native-web";
 
 function ModuleList(Props) {
   var json = Props.json;
@@ -18,11 +18,11 @@ function ModuleList(Props) {
           return __x.sort(Utils.sortBySize);
         }), [json]);
   var partial_arg = Caml_option.some(undefined);
-  return React.createElement(ReactNative.View, {
+  return React.createElement(ReactNativeWeb.View, {
               style: {
                 flex: 1
               },
-              children: React.createElement(ReactNative.FlatList, {
+              children: React.createElement(ReactNativeWeb.FlatList, {
                     data: data,
                     renderItem: (function (param) {
                         return ModuleItem.moduleItem(partial_arg, param);

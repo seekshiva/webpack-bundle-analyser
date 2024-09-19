@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import * as ReactNative from "react-native";
+import * as ReactNativeWeb from "react-native-web";
 
-var styles = ReactNative.StyleSheet.create({
+var styles = ReactNativeWeb.StyleSheet.create({
       monospaceText: {
         fontFamily: "monospace"
       }
@@ -14,8 +14,8 @@ function $$Text(Props) {
   var children = Props.children;
   var styleOpt = Props.style;
   var style = styleOpt !== undefined ? Caml_option.valFromOption(styleOpt) : null;
-  return React.createElement(ReactNative.Text, {
-              style: ReactNative.StyleSheet.flatten([
+  return React.createElement(ReactNativeWeb.Text, {
+              style: ReactNativeWeb.StyleSheet.flatten([
                     styles.monospaceText,
                     style
                   ]),

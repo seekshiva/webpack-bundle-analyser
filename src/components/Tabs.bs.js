@@ -2,7 +2,7 @@
 
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
-import * as ReactNative from "react-native";
+import * as ReactNativeWeb from "react-native-web";
 
 var tabList = [
   "chunks",
@@ -13,14 +13,14 @@ function Tabs(Props) {
   var currentTab = Props.currentTab;
   var setTab = Props.setTab;
   var isCurrentTabInList = tabList.includes(currentTab);
-  return React.createElement(ReactNative.View, {
+  return React.createElement(ReactNativeWeb.View, {
               style: {
                 flexDirection: "row"
               },
               children: null
             }, tabList.map(function (item, index) {
                   var title = currentTab === item ? "\"" + item + "\"" : item;
-                  return React.createElement(ReactNative.Button, {
+                  return React.createElement(ReactNativeWeb.Button, {
                               title: title,
                               onPress: (function (param) {
                                   return Curry._1(setTab, (function (param) {
@@ -29,7 +29,7 @@ function Tabs(Props) {
                                 }),
                               key: String(index)
                             });
-                }), isCurrentTabInList ? null : React.createElement(ReactNative.Button, {
+                }), isCurrentTabInList ? null : React.createElement(ReactNativeWeb.Button, {
                     title: "\"" + currentTab + "\"",
                     onPress: (function (param) {
                         return Curry._1(setTab, (function (param) {

@@ -6,18 +6,18 @@ type jsonModule = {default: Js.Json.t}
 external webpackDynamicImport: string => Js.Promise.t<jsonModule> = "import"
 
 let useStatJSON = () => {
-  let (statJSON, setStatJSON) = React.useState(() => Js.Nullable.null)
+  let (statJSON, _setStatJSON) = React.useState(() => Js.Nullable.null)
 
-  React.useEffect0(() => {
-    let _ =
-      webpackDynamicImport(
-        "/Users/juspay/Code/juspay/rescript-euler-dashboard/stat.json",
-      )->Js.Promise.then_(json => {
-        setStatJSON(_ => json.default->Js.Nullable.return)
-        Js.Promise.resolve(Js.Nullable.null)
-      }, _)
-    None
-  })
+  // React.useEffect0(() => {
+  //   let _ =
+  //     webpackDynamicImport(
+  //       "/Users/juspay/Code/juspay/rescript-euler-dashboard/stat.json",
+  //     )->Js.Promise.then_(json => {
+  //       setStatJSON(_ => json.default->Js.Nullable.return)
+  //       Js.Promise.resolve(Js.Nullable.null)
+  //     }, _)
+  //   None
+  // })
 
   statJSON
 }

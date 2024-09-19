@@ -9,7 +9,7 @@ import * as Caml_array from "rescript/lib/es6/caml_array.js";
 import * as ModuleItem from "./ModuleItem.bs.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import * as ReactNative from "react-native";
+import * as ReactNativeWeb from "react-native-web";
 import * as Standalone from "prettier/standalone";
 
 function ShowModule$ModuleInfo(Props) {
@@ -29,7 +29,7 @@ function ShowModule$ModuleInfo(Props) {
         }));
   var moduleSize = String(activeModule.size);
   var moduleReason = Belt_Option.getWithDefault(Caml_option.nullable_to_opt(activeModule.reason), "");
-  return React.createElement(ReactNative.View, {
+  return React.createElement(ReactNativeWeb.View, {
               children: React.createElement($$Text.make, {
                     children: "Module #" + moduleId + ": [size " + moduleSize + "] " + moduleReason + " " + modulesCountInfo
                   })
@@ -40,7 +40,7 @@ var ModuleInfo = {
   make: ShowModule$ModuleInfo
 };
 
-var styles = ReactNative.StyleSheet.create({
+var styles = ReactNativeWeb.StyleSheet.create({
       centeredContent: {
         alignItems: "center"
       }
@@ -60,17 +60,17 @@ function ShowModule$ShowModuleInternal(Props) {
           return ModuleItem.moduleItem(Caml_option.some(matchingModule), arg);
         }), [matchingModule]);
   var source = matchingModule.source;
-  return React.createElement(ReactNative.View, {
+  return React.createElement(ReactNativeWeb.View, {
               style: {
                 flex: 1
               },
               children: null
-            }, React.createElement(ReactNative.View, {
+            }, React.createElement(ReactNativeWeb.View, {
                   style: styles.centeredContent,
                   children: React.createElement(ShowModule$ModuleInfo, {
                         activeModule: matchingModule
                       })
-                }), (source == null) ? null : React.createElement(ReactNative.ScrollView, {
+                }), (source == null) ? null : React.createElement(ReactNativeWeb.ScrollView, {
                     style: {
                       flex: 1
                     },
@@ -79,7 +79,7 @@ function ShowModule$ShowModuleInternal(Props) {
                                 plugins: []
                               })
                         })
-                  }), subModules.length !== 0 ? React.createElement(ReactNative.FlatList, {
+                  }), subModules.length !== 0 ? React.createElement(ReactNativeWeb.FlatList, {
                     data: subModules,
                     renderItem: renderItem,
                     style: {

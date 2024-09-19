@@ -5,24 +5,24 @@ import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import * as ReactNative from "react-native";
+import * as ReactNativeWeb from "react-native-web";
 
 function ChunkInfo$ChunksList(Props) {
   var title = Props.title;
   var chunkIds = Props.chunkIds;
   var optionalSetTab = Props.setTab;
   if (chunkIds.length !== 0) {
-    return React.createElement(ReactNative.View, {
+    return React.createElement(ReactNativeWeb.View, {
                 children: null
               }, React.createElement($$Text.make, {
                     children: title
-                  }), React.createElement(ReactNative.View, {
+                  }), React.createElement(ReactNativeWeb.View, {
                     style: {
                       flexDirection: "row",
                       flexWrap: "wrap"
                     },
                     children: optionalSetTab !== undefined ? chunkIds.map(function (chunkId) {
-                            return React.createElement(ReactNative.Button, {
+                            return React.createElement(ReactNativeWeb.Button, {
                                         title: chunkId,
                                         onPress: (function (param) {
                                             return Curry._1(optionalSetTab, "chunks:" + chunkId);
@@ -62,7 +62,7 @@ function ChunkInfo(Props) {
   if (setTab !== undefined) {
     tmp$1.setTab = Caml_option.valFromOption(setTab);
   }
-  return React.createElement(ReactNative.View, {
+  return React.createElement(ReactNativeWeb.View, {
               children: null
             }, React.createElement($$Text.make, {
                   children: "Chunk #" + chunkIdStr + ": [size " + chunkSizeStr + "] " + chunkReason + " (" + modulesLenStr + " modules) : " + fileNames

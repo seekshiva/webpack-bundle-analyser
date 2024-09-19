@@ -8,9 +8,9 @@ import * as ChunkInfo from "./ChunkInfo.bs.js";
 import * as ModuleItem from "./ModuleItem.bs.js";
 import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
-import * as ReactNative from "react-native";
+import * as ReactNativeWeb from "react-native-web";
 
-var styles = ReactNative.StyleSheet.create({
+var styles = ReactNativeWeb.StyleSheet.create({
       centeredContent: {
         alignItems: "center"
       }
@@ -35,17 +35,17 @@ function ShowChunk(Props) {
             return __x.sort(Utils.sortBySize);
           }), [optionalMatchingChunk$1]);
     var partial_arg = Caml_option.some(undefined);
-    return React.createElement(ReactNative.View, {
+    return React.createElement(ReactNativeWeb.View, {
                 style: {
                   flex: 1
                 },
                 children: null
-              }, React.createElement(ReactNative.View, {
+              }, React.createElement(ReactNativeWeb.View, {
                     style: styles.centeredContent,
                     children: React.createElement(ChunkInfo.make, {
                           activeChunk: optionalMatchingChunk$1
                         })
-                  }), React.createElement(ReactNative.FlatList, {
+                  }), React.createElement(ReactNativeWeb.FlatList, {
                     data: data,
                     renderItem: (function (param) {
                         return ModuleItem.moduleItem(partial_arg, param);

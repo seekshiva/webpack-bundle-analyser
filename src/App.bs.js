@@ -2,35 +2,22 @@
 
 import * as Tabs from "./components/Tabs.bs.js";
 import * as $$Text from "./components/Text.bs.js";
-import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as ChunkList from "./components/ChunkList.bs.js";
 import * as ShowChunk from "./components/ShowChunk.bs.js";
 import * as ModuleList from "./components/ModuleList.bs.js";
 import * as ShowModule from "./components/ShowModule.bs.js";
-import * as ReactNative from "react-native";
+import * as ReactNativeWeb from "react-native-web";
 import * as RescriptReactRouter from "@rescript/react/src/RescriptReactRouter.bs.js";
 
 function useStatJSON(param) {
-  var match = React.useState(function () {
-        return null;
-      });
-  var setStatJSON = match[1];
-  React.useEffect((function () {
-          var __x = import("/Users/juspay/Code/juspay/rescript-euler-dashboard/stat.json");
-          __x.then(function (json) {
-                Curry._1(setStatJSON, (function (param) {
-                        return json.default;
-                      }));
-                return Promise.resolve(null);
-              });
-          
-        }), []);
-  return match[0];
+  return React.useState(function () {
+                return null;
+              })[0];
 }
 
-var styles = ReactNative.StyleSheet.create({
+var styles = ReactNativeWeb.StyleSheet.create({
       container: {
         flex: 1,
         backgroundColor: "#fff",
@@ -114,10 +101,10 @@ function App$LoadedApp(Props) {
           json: json
         });
   }
-  return React.createElement(ReactNative.View, {
+  return React.createElement(ReactNativeWeb.View, {
               style: styles.container,
               children: null
-            }, React.createElement(ReactNative.View, {
+            }, React.createElement(ReactNativeWeb.View, {
                   style: styles.centeredContent,
                   children: null
                 }, React.createElement($$Text.make, {
@@ -148,7 +135,7 @@ function App(Props) {
   window.json = nullableJson;
   console.log("json", nullableJson);
   if (nullableJson == null) {
-    return React.createElement(ReactNative.ActivityIndicator, {});
+    return React.createElement(ReactNativeWeb.ActivityIndicator, {});
   } else {
     return React.createElement(App$LoadedApp, {
                 json: nullableJson
