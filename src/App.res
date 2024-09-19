@@ -1,27 +1,5 @@
 @val external window: {..} = "window"
 
-type jsonModule = {default: Js.Json.t}
-
-@val
-external webpackDynamicImport: string => Js.Promise.t<jsonModule> = "import"
-
-let useStatJSON = () => {
-  let (statJSON, _setStatJSON) = React.useState(() => Js.Nullable.null)
-
-  // React.useEffect0(() => {
-  //   let _ =
-  //     webpackDynamicImport(
-  //       "/Users/juspay/Code/juspay/rescript-euler-dashboard/stat.json",
-  //     )->Js.Promise.then_(json => {
-  //       setStatJSON(_ => json.default->Js.Nullable.return)
-  //       Js.Promise.resolve(Js.Nullable.null)
-  //     }, _)
-  //   None
-  // })
-
-  statJSON
-}
-
 let styles = ReactNative.createStyleSheet({
   "container": {
     "flex": 1,
@@ -93,17 +71,22 @@ let initializeBodyStyle = () => {
   bodyStyle["height"] = "100%"
 }
 
+module MyFilePicker = {
+  @module("./JsonFileReader.js") @react.component
+  external make: (
+    ~nullableJson: Js.Nullable.t<Js.Json.t>,
+    ~setNullableJson: (Js.Nullable.t<Js.Json.t> => Js.Nullable.t<Js.Json.t>) => unit,
+  ) => React.element = "default"
+}
+
 @react.component
 let make = () => {
-  let nullableJson = useStatJSON()
+  let (nullableJson, setNullableJson) = React.useState(() => Js.Nullable.null)
   window["json"] = nullableJson
   Js.log2("json", nullableJson)
   switch nullableJson->Js.Nullable.toOption {
   | Some(json) => <LoadedApp json={json} />
-  | None => {
-      open ReactNative
-      <ActivityIndicator />
-    }
+  | None => <MyFilePicker nullableJson setNullableJson />
   }
 }
 

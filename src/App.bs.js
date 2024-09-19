@@ -9,13 +9,8 @@ import * as ShowChunk from "./components/ShowChunk.bs.js";
 import * as ModuleList from "./components/ModuleList.bs.js";
 import * as ShowModule from "./components/ShowModule.bs.js";
 import * as ReactNativeWeb from "react-native-web";
+import JsonFileReaderJs from "./JsonFileReader.js";
 import * as RescriptReactRouter from "@rescript/react/src/RescriptReactRouter.bs.js";
-
-function useStatJSON(param) {
-  return React.useState(function () {
-                return null;
-              })[0];
-}
 
 var styles = ReactNativeWeb.StyleSheet.create({
       container: {
@@ -130,12 +125,24 @@ function initializeBodyStyle(param) {
   
 }
 
+var make = JsonFileReaderJs;
+
+var MyFilePicker = {
+  make: make
+};
+
 function App(Props) {
-  var nullableJson = useStatJSON(undefined);
+  var match = React.useState(function () {
+        return null;
+      });
+  var nullableJson = match[0];
   window.json = nullableJson;
   console.log("json", nullableJson);
   if (nullableJson == null) {
-    return React.createElement(ReactNativeWeb.ActivityIndicator, {});
+    return React.createElement(make, {
+                nullableJson: nullableJson,
+                setNullableJson: match[1]
+              });
   } else {
     return React.createElement(App$LoadedApp, {
                 json: nullableJson
@@ -145,16 +152,16 @@ function App(Props) {
 
 initializeBodyStyle(undefined);
 
-var make = App;
+var make$1 = App;
 
 var $$default = App;
 
 export {
-  useStatJSON ,
   styles ,
   LoadedApp ,
   initializeBodyStyle ,
-  make ,
+  MyFilePicker ,
+  make$1 as make,
   $$default ,
   $$default as default,
   
